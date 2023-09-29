@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define N 20 // Change N to the desired board size
+#define N 50 // Change N to the desired board size
 
 // Initialize queen randomly with one queen per column
 void initializeBoard(int board[N]) {
@@ -48,7 +48,7 @@ void copyBoard(int source[N], int destination[N]) {
 }
 
 // Function to move two queens to reduce the number of conflict
-void move2Queens(int board[N], int queen1, int queen2, int *count) {
+void optimizer(int board[N], int queen1, int queen2, int *count) {
 
     int bestConflictValue = calculateConflicts(board);
     int bestQueen1 = board[queen1];
@@ -93,6 +93,9 @@ void localSearch(int board[N]) {
 
     int count = 0;
 
+    clock_t t;
+    t = clock();
+
     while(calculateConflicts(board) != 0){
 
         //randomly choose 2 queens
@@ -102,8 +105,12 @@ void localSearch(int board[N]) {
             queen2 = rand() % N;
         } while (queen2 == queen1);
 
-        move2Queens(board, queen1, queen2, &count);
+        optimizer(board, queen1, queen2, &count);
     }
+
+    t = clock() - t;
+    double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds
+ 
 
     printf("Final board: [");
     for (int i = 0; i < N; i++) {
@@ -114,6 +121,8 @@ void localSearch(int board[N]) {
         printf("%d,", board[i]);
     }
     printf("]\n"); 
+
+    printf("fun() took %f seconds to execute \n", time_taken);
 
 }
 
